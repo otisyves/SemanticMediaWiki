@@ -11,7 +11,7 @@ function installPHPUnitWithComposer {
 	then
 		composer require 'phpunit/phpunit='$PHPUNIT --update-with-dependencies
 	else
-		composer require 'phpunit/phpunit=3.7.*' --update-with-dependencies
+		composer require 'phpunit/phpunit=4.8.*' --update-with-dependencies
 	fi
 }
 
