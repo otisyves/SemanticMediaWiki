@@ -211,9 +211,11 @@ class HookRegistryTest extends \PHPUnit_Framework_TestCase {
 		$this->doTestExecutionForOutputPageCheckLastModified( $instance );
 		$this->doTestExecutionForIsFileCacheable( $instance );
 		$this->doTestExecutionForRejectParserCacheValue( $instance );
+		$this->doTestExecutionForSoftwareInfo( $instance );
 
 		// Usage of registered hooks in/by smw-core
 		//$this->doTestExecutionForSMWStoreDropTables( $instance );
+		$this->doTestExecutionForSMWSQLStoreEntityReferenceCleanUpComplete( $instance );
 		$this->doTestExecutionForSMWSQLStorAfterDataUpdateComplete( $instance );
 		$this->doTestExecutionForSMWStoreBeforeQueryResultLookupComplete( $instance );
 		$this->doTestExecutionForSMWStoreAfterQueryResultLookupComplete( $instance );
@@ -1208,6 +1210,20 @@ class HookRegistryTest extends \PHPUnit_Framework_TestCase {
 		$this->handlers[$handler] = true;
 	}
 
+	public function doTestExecutionForSoftwareInfo( $instance ) {
+
+		$handler = 'SoftwareInfo';
+
+		$software = [];
+
+		$this->assertThatHookIsExcutable(
+			$instance->getHandlerFor( $handler ),
+			[ &$software ]
+		);
+
+		$this->handlers[$handler] = true;
+	}
+
 	public function doTestExecutionForSMWStoreDropTables( $instance ) {
 
 		$handler = 'SMW::Store::dropTables';
@@ -1217,6 +1233,22 @@ class HookRegistryTest extends \PHPUnit_Framework_TestCase {
 		$this->assertThatHookIsExcutable(
 			$instance->getHandlerFor( $handler ),
 			array( $verbose )
+		);
+
+		$this->handlers[$handler] = true;
+	}
+
+	public function doTestExecutionForSMWSQLStoreEntityReferenceCleanUpComplete( $instance ) {
+
+		$handler = 'SMW::SQLStore::EntityReferenceCleanUpComplete';
+
+		$id = 42;
+		$subject = DIWikiPage::newFromText( __METHOD__ );
+		$isRedirect = false;
+
+		$this->assertThatHookIsExcutable(
+			$instance->getHandlerFor( $handler ),
+			array( $this->store, $id, $subject, $isRedirect )
 		);
 
 		$this->handlers[$handler] = true;
